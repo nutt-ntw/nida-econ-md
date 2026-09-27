@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { BookOpen, Files, Gauge, Layers3, ListChecks, Menu, Moon, Search, Sparkles, Sun, X } from "lucide-react";
+import { BookOpen, Files, Gauge, GraduationCap, Layers3, ListChecks, Menu, Moon, Search, Sparkles, Sun, X } from "lucide-react";
 import { WebMcpTools } from "@/components/webmcp-tools";
 
 const items = [
@@ -12,6 +12,7 @@ const items = [
   { href: "/materials", label: "Material", icon: Files },
   { href: "/flashcards", label: "บัตรคำ", icon: Layers3 },
   { href: "/quiz", label: "แบบฝึกหัด", icon: ListChecks },
+  { href: "/exam-prep", label: "เตรียมสอบ", icon: GraduationCap },
   { href: "/review", label: "ทบทวนด่วน", icon: Sparkles },
 ];
 

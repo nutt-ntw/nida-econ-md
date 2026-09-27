@@ -4,7 +4,7 @@
 
 ## สถานะเนื้อหาปัจจุบัน
 
-เนื้อหาปัจจุบันสร้างจาก Material ในโฟลเดอร์วิชา ได้แก่ PDF ชุดที่ 1–8 และ `Conclusion.docx` โดยทำสำเนาไฟล์สำหรับเว็บไว้ใน `public/materials/` พร้อม PDF ของ Conclusion สำหรับ preview ใน browser
+เนื้อหาปัจจุบันสร้างจาก Material ในโฟลเดอร์วิชา ได้แก่ PDF ชุดที่ 1–8, `Conclusion.docx` และ `สรุปแนวข้อสอบ_ECON_ฉบับพร้อมอ่าน.docx` โดยทำสำเนาไฟล์สำหรับเว็บไว้ใน `public/materials/` พร้อม PDF สำหรับ preview ใน browser
 
 เว็บไซต์จัดเนื้อหาเป็น 8 บท ตั้งแต่พื้นฐานเศรษฐศาสตร์ เงินเฟ้อ GDP และนโยบาย ไปจนถึงเงิน/Forex, Managerial Economics, Demand–Supply, Elasticity และ Demand Estimation ทุกส่วนระบุ Material และเลขหน้าที่ตรวจสอบแล้ว
 
@@ -17,6 +17,7 @@
 - Flashcards พร้อมพลิกบัตร สุ่ม และระดับ `จำได้` / `ยังไม่แน่ใจ` / `ต้องทบทวน`
 - Quiz โหมดฝึกทีละข้อและโหมดจำลองสอบ 10 นาที พร้อมคะแนนและคำอธิบาย
 - Quick Review รวมสูตร นิยาม และประเด็นสำคัญจากเนื้อหาจริง
+- หน้าเตรียมสอบจัดลำดับหัวข้อออกสอบ โครงตอบข้อเขียน และลิงก์ตรงไปยังชีทสรุป
 - Light/Dark mode, responsive layout, keyboard focus และ `prefers-reduced-motion`
 - เก็บความคืบหน้า บุ๊กมาร์ก ผลบัตรคำ และคะแนนล่าสุดใน `localStorage`
 - Static export ไปที่ `out/` และ workflow สำหรับ GitHub Pages
