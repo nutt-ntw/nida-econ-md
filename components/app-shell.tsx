@@ -3,12 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { BookOpen, Files, Gauge, GraduationCap, Layers3, ListChecks, Menu, Moon, Search, Sparkles, Sun, X } from "lucide-react";
+import { BookOpen, Files, Gauge, GraduationCap, Headphones, Layers3, ListChecks, Menu, Moon, Search, Sparkles, Sun, X } from "lucide-react";
 import { WebMcpTools } from "@/components/webmcp-tools";
 
 const items = [
   { href: "/", label: "ภาพรวม", icon: Gauge },
   { href: "/lessons", label: "บทเรียน", icon: BookOpen },
+  { href: "/listen", label: "ฟังบทเรียน", icon: Headphones },
   { href: "/materials", label: "Material", icon: Files },
   { href: "/flashcards", label: "บัตรคำ", icon: Layers3 },
   { href: "/quiz", label: "แบบฝึกหัด", icon: ListChecks },
@@ -95,7 +96,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       )}
 
       <nav aria-label="เมนูมือถือ" className="mobile-bottom-nav fixed inset-x-3 bottom-3 z-40 grid grid-cols-5 rounded-2xl border border-[var(--line)] bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] p-1.5 shadow-2xl backdrop-blur-xl lg:hidden">
-        {items.filter((_, index) => [0, 1, 3, 4, 5].includes(index)).map((item) => {
+        {items.filter((item) => ["/", "/lessons", "/listen", "/quiz", "/exam-prep"].includes(item.href)).map((item) => {
           const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
           return <Link key={item.href} href={item.href} className={`flex min-h-13 flex-col items-center justify-center rounded-xl text-[.68rem] font-semibold ${active ? "bg-[var(--surface-2)] text-[var(--brand)]" : "muted"}`}><item.icon size={19} /><span>{item.label}</span></Link>;
         })}
