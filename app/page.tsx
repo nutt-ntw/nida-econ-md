@@ -25,7 +25,7 @@ export default function DashboardPage() {
         <Link href={`/lessons/${nextLesson.slug}/`} className="button-primary self-start px-5 xl:self-auto">เรียนต่อ <ArrowRight size={18} /></Link>
       </div>
 
-      <Link href="/listen/" className="surface mb-6 flex flex-col gap-4 p-5 sm:flex-row sm:items-center"><span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-[var(--surface-2)] text-[var(--brand)]"><Headphones size={25} /></span><span className="flex-1"><strong className="block text-lg">เพิ่งเริ่มเรียน ECON? ลองฟังเรื่องเล่าก่อน</strong><span className="muted">อธิบายศัพท์ด้วยภาษาง่ายและตัวอย่างใกล้ตัว ฟังพร้อมอ่านตามได้</span></span><span className="inline-flex items-center gap-2 font-bold text-[var(--brand)]">เริ่มฟัง <ArrowRight size={18} /></span></Link>
+      <Link href="/listen/" className="surface mb-6 flex flex-col gap-4 p-5 sm:flex-row sm:items-center"><span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-[var(--surface-2)] text-[var(--brand)]"><Headphones size={25} /></span><span className="flex-1"><strong className="block text-lg">เพิ่งเริ่มเรียน ECON? ลองฟังเรื่องเล่าก่อน</strong><span className="muted">เล่านิยามและโจทย์จาก Material ด้วยภาษาง่าย พร้อมคำช่วยจำและหน้าต้นทาง</span></span><span className="inline-flex items-center gap-2 font-bold text-[var(--brand)]">เริ่มฟัง <ArrowRight size={18} /></span></Link>
 
       <section className="grid gap-4 md:grid-cols-3" aria-label="สรุปความคืบหน้า">
         <article className="surface relative overflow-hidden p-6 md:col-span-2">

@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, BookOpen, CheckCircle2, Headphones, Pause, Play, RotateCcw, SkipBack, SkipForward, Square } from "lucide-react";
-import { lessons, sourceHref } from "@/lib/content";
+import { sourceHref } from "@/lib/content";
 import { listeningEpisodes } from "@/lib/listening";
 import { NarrationPlayer, type NarrationState } from "@/lib/narration-player";
 import { Breadcrumbs, StatusPill } from "@/components/ui";
@@ -20,7 +20,6 @@ export default function ListenPage() {
   const [rate, setRate] = useState(0.9);
   const player = useRef<NarrationPlayer | null>(null);
   const episode = listeningEpisodes[episodeIndex];
-  const lesson = lessons.find((item) => item.slug === episode.slug)!;
   const playing = playback.status === "playing";
   const canPlay = ready && supported && voices.length > 0;
   const activeSegment = episode.segments[playback.segmentIndex];
@@ -85,11 +84,11 @@ export default function ListenPage() {
       <Breadcrumbs items={[{ label: "ภาพรวม", href: "/" }, { label: "ฟังบทเรียน" }]} />
       <div className="flex items-start gap-4">
         <span className="hidden size-14 shrink-0 place-items-center rounded-2xl bg-[var(--brand)] text-white sm:grid"><Headphones size={27} /></span>
-        <div><span className="eyebrow">เริ่มจากศูนย์ ค่อย ๆ เข้าใจ</span><h1 className="page-title mt-2">ให้เศรษฐศาสตร์<br />เป็นเรื่องใกล้ตัว</h1><p className="mt-4 max-w-2xl text-lg muted">ฟังคำอธิบายภาษาง่ายทีละช่วง เริ่มจากตัวอย่างในชีวิตประจำวัน แล้วค่อยเชื่อมศัพท์และแนวข้อสอบ ไม่ต้องมีพื้นฐานมาก่อน</p></div>
+        <div><span className="eyebrow">เริ่มจากศูนย์ · เนื้อหาจาก Material เท่านั้น</span><h1 className="page-title mt-2">ฟังเศรษฐศาสตร์<br />ให้เข้าใจทีละเรื่อง</h1><p className="mt-4 max-w-2xl text-lg muted">เล่าจากชีทด้วยภาษาง่าย เรียงเป็นช่วงสั้น ๆ พร้อมคำช่วยจำ ใช้นิยาม เงื่อนไข และโจทย์จาก Material ไม่เพิ่มตัวอย่างสมมติจากนอกชีท</p></div>
       </div>
 
       <div className="mt-8 grid gap-6 xl:grid-cols-[19rem_minmax(0,1fr)]">
-        <aside><span className="eyebrow">ฟังตามลำดับ หรือเลือกเรื่องที่สนใจ</span><label className="mt-3 block xl:hidden" htmlFor="listen-episode"><span className="sr-only">เลือกตอนที่ต้องการฟัง</span><select id="listen-episode" value={episodeIndex} onChange={(event) => selectEpisode(Number(event.target.value))} className="min-h-12 w-full rounded-xl border border-[var(--line)] bg-[var(--surface)] px-3 text-[var(--ink)]">{listeningEpisodes.map((item, index) => <option key={item.slug} value={index}>{index + 1}. {item.title}</option>)}</select></label><nav className="mt-3 hidden space-y-2 xl:block" aria-label="เลือกบทสำหรับฟัง">{listeningEpisodes.map((item, index) => <button key={item.slug} onClick={() => selectEpisode(index)} aria-current={index === episodeIndex ? "true" : undefined} className={`flex w-full items-start gap-3 rounded-2xl border p-4 text-left ${index === episodeIndex ? "border-[var(--brand)] bg-[var(--surface-2)]" : "border-[var(--line)] bg-[var(--surface)] hover:bg-[var(--surface-2)]"}`}><span className="mt-0.5 text-sm font-extrabold text-[var(--brand)]">{String(index + 1).padStart(2, "0")}</span><span><strong className="block leading-snug">{item.title}</strong><small className="mt-1 block muted">{item.segments.length} ช่วงสั้น ๆ</small></span></button>)}</nav><p className="mt-4 text-sm muted">ตัวอย่างสมมติช่วยอธิบายแนวคิด แต่ละช่วงมีลิงก์ไปยังบทเรียนและชีทที่เกี่ยวข้อง</p></aside>
+        <aside><span className="eyebrow">ฟังตามลำดับ หรือเลือกเรื่องที่สนใจ</span><label className="mt-3 block xl:hidden" htmlFor="listen-episode"><span className="sr-only">เลือกตอนที่ต้องการฟัง</span><select id="listen-episode" value={episodeIndex} onChange={(event) => selectEpisode(Number(event.target.value))} className="min-h-12 w-full rounded-xl border border-[var(--line)] bg-[var(--surface)] px-3 text-[var(--ink)]">{listeningEpisodes.map((item, index) => <option key={item.slug} value={index}>{index + 1}. {item.title}</option>)}</select></label><nav className="mt-3 hidden space-y-2 xl:block" aria-label="เลือกบทสำหรับฟัง">{listeningEpisodes.map((item, index) => <button key={item.slug} onClick={() => selectEpisode(index)} aria-current={index === episodeIndex ? "true" : undefined} className={`flex w-full items-start gap-3 rounded-2xl border p-4 text-left ${index === episodeIndex ? "border-[var(--brand)] bg-[var(--surface-2)]" : "border-[var(--line)] bg-[var(--surface)] hover:bg-[var(--surface-2)]"}`}><span className="mt-0.5 text-sm font-extrabold text-[var(--brand)]">{String(index + 1).padStart(2, "0")}</span><span><strong className="block leading-snug">{item.title}</strong><small className="mt-1 block muted">{item.segments.length} ช่วงสั้น ๆ</small></span></button>)}</nav><p className="mt-4 text-sm muted">ปรับถ้อยคำและลำดับให้จำง่ายจากชีทเท่านั้น ทุกช่วงระบุหน้าต้นทางของบทอ่านโดยตรง ไม่ได้ใช้ลิงก์บทเรียนแทนหลักฐาน</p></aside>
 
         <article className="min-w-0">
           <header className="surface p-6 sm:p-8"><StatusPill tone="brand">ตอนที่ {episodeIndex + 1} / {listeningEpisodes.length} · ไม่ต้องมีพื้นฐาน</StatusPill><h2 className="section-title mt-4">{episode.title}</h2><p className="mt-2 muted">{episode.description}</p></header>
@@ -107,17 +106,17 @@ export default function ListenPage() {
             </div>
             <p role="status" aria-live="polite" className="mt-3 text-sm muted">{!ready ? "กำลังเตรียมเสียง…" : !supported ? "เบราว์เซอร์นี้ไม่รองรับการอ่านออกเสียง อ่านบทเล่าด้านล่างได้ หรือเปิดด้วยเบราว์เซอร์อื่น" : !voices.length ? "ยังไม่พบเสียงภาษาไทยในเครื่อง เพิ่มเสียงภาษาไทยในการตั้งค่าเสียงของอุปกรณ์ แล้วกดค้นหาเสียงใหม่" : playback.status === "error" ? playback.message : playback.status === "ended" ? "ฟังจบตอนแล้ว ลองตอบคำถามท้ายตอนก่อนฟังเรื่องถัดไป" : playback.status === "paused" ? "พักเสียงแล้ว เมื่อฟังต่อจะทวนวลีที่ค้างไว้" : playing ? `กำลังอ่านช่วง ${playback.segmentIndex + 1}: ${activeSegment.title}` : "กดเริ่มฟัง แล้วอ่านตามบทเล่าด้านล่างได้"}</p>
             {supported && !voices.length && <button onClick={refreshVoices} className="button-ghost mt-2 text-sm"><RotateCcw size={16} /> ค้นหาเสียงใหม่</button>}
-            <details className="mt-2 text-xs muted"><summary className="cursor-pointer">เกี่ยวกับเสียงอ่าน</summary><p className="mt-1">ใช้เสียงสังเคราะห์ภาษาไทยของอุปกรณ์ คุณภาพเสียงและการฟังขณะล็อกหน้าจอขึ้นกับเครื่องและเบราว์เซอร์ที่ใช้</p></details>
+            <details className="mt-2 text-xs muted"><summary className="cursor-pointer">เกี่ยวกับเสียงอ่าน</summary><p className="mt-1">ตอนนี้ยังใช้เสียงไทยของอุปกรณ์ ไม่ใช่เสียง AI ที่สร้างเป็นไฟล์ คุณภาพจึงขึ้นกับเครื่องและเบราว์เซอร์ แม้ปรับบทอ่านให้พักตามประโยคแล้ว หากมีเสียงไทยหลายตัวให้ลองเปลี่ยนเสียงด้านบน การฟังขณะล็อกหน้าจออาจไม่ต่อเนื่อง</p></details>
           </section>
 
           <div className="mt-6 flex items-center justify-between"><h3 className="text-lg font-extrabold">บทเล่าสำหรับอ่านตาม</h3><span className="text-sm muted">{episode.segments.length} ช่วง</span></div>
           <div className="mt-3 space-y-4">{episode.segments.map((segment, index) => {
             const active = playback.status !== "idle" && playback.segmentIndex === index;
-            const reference = lesson.sections.find((section) => section.id === segment.sectionId)?.reference;
+            const reference = segment.reference;
             return <section key={segment.title} className={`surface p-5 sm:p-7 ${active ? "!border-[var(--brand)] ring-2 ring-[color-mix(in_srgb,var(--brand)_15%,transparent)]" : ""}`}>
               <div className="flex items-start justify-between gap-3"><div><span className="eyebrow">ช่วงที่ {index + 1}{active && playing ? " · กำลังอ่าน" : ""}</span><h4 className="mt-1 text-xl font-extrabold">{segment.title}</h4></div><button onClick={() => play(index)} disabled={!canPlay} className="button-ghost shrink-0 !px-2 disabled:opacity-40" aria-label={`ฟังช่วง ${segment.title}`}><Play size={19} /></button></div>
-              <p className="mt-4 text-[1.05rem] leading-9">{segment.text}</p>
-              <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm font-semibold text-[var(--brand)]"><Link href={`/lessons/${episode.slug}/#${segment.sectionId}`}>อ่านบทเรียนที่เกี่ยวข้อง</Link>{reference && <a href={sourceHref(reference)} target="_blank" rel="noreferrer">{reference.label}</a>}</div>
+              <p className="mt-4 whitespace-pre-line text-[1.05rem] leading-9">{segment.text}</p>
+              <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm font-semibold text-[var(--brand)]"><a href={sourceHref(reference)} target="_blank" rel="noreferrer">ที่มาของบทอ่าน: {reference.label}</a><Link href={`/lessons/${segment.lessonSlug ?? episode.slug}/#${segment.sectionId}`}>อ่านบทเรียนที่เกี่ยวข้อง</Link></div>
             </section>;
           })}</div>
 

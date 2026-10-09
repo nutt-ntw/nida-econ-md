@@ -30,11 +30,12 @@ function setup(t) {
   return { player, spoken, state: () => state };
 }
 
-test("Thai chunks preserve words, content, and practical utterance length", () => {
+test("Thai narration preserves complete authored sentences and content", () => {
   const text = listeningEpisodes[0].segments[0].text;
   const chunks = splitSpokenText(text);
   assert.ok(chunks.length > 1);
-  assert.ok(chunks.every((part) => part.length <= 160));
+  assert.deepEqual(chunks, text.split("\n"));
+  assert.ok(chunks.every((part) => part.length <= 400));
   assert.equal(chunks.join("").replace(/\s/g, ""), text.replace(/\s/g, ""));
 });
 
@@ -103,18 +104,46 @@ test("speech errors offer recovery without advancing the episode", (t) => {
   assert.equal(f.state().segmentIndex, 0);
 });
 
-test("all eight episodes link to existing lesson sections and materials", () => {
+test("all narration sources are original material sheets with valid PDF pages", () => {
   assert.equal(listeningEpisodes.length, 8);
   assert.equal(new Set(listeningEpisodes.map((item) => item.slug)).size, 8);
   for (const episode of listeningEpisodes) {
-    const lesson = lessons.find((item) => item.slug === episode.slug);
-    assert.ok(lesson, episode.slug);
+    assert.ok(lessons.some((item) => item.slug === episode.slug), episode.slug);
     for (const segment of episode.segments) {
-      const source = lesson.sections.find((item) => item.id === segment.sectionId);
-      assert.ok(source?.reference, `${episode.slug} / ${segment.sectionId}`);
-      assert.ok(materials.some((item) => item.id === source.reference.materialId));
+      const lesson = lessons.find((item) => item.slug === (segment.lessonSlug ?? episode.slug));
+      assert.ok(lesson?.sections.some((item) => item.id === segment.sectionId), `${episode.slug} / ${segment.sectionId}`);
+      const reference = segment.reference;
+      assert.match(reference.materialId, /^set-[1-8]$/, "No exam-summary-only or external sources in narration");
+      assert.equal(reference.externalUrl, undefined);
+      const material = materials.find((item) => item.id === reference.materialId);
+      assert.ok(material);
+      assert.ok(Number.isInteger(reference.page) && reference.page >= 1);
+      assert.ok(reference.pageEnd >= reference.page && reference.pageEnd <= material.pageCount);
+      assert.equal(reference.label, `ชุดที่ ${reference.materialId.slice(4)} หน้า ${reference.page}${reference.pageEnd === reference.page ? "" : `–${reference.pageEnd}`}`);
+      assert.doesNotMatch(segment.text, /สมมติ(?:ว่า|คุณ|เดือน)|กาแฟ|สองหมื่นห้าพันบาท|ลบสองร้อย|ลบสาม/, "No prior invented or exam-summary-only examples");
     }
   }
+});
+
+test("long sentences use bounded fallback without losing Thai or unbroken Latin text", () => {
+  for (const text of ["การจัดสรรทรัพยากร".repeat(50), "a".repeat(600)]) {
+    const chunks = splitSpokenText(text, 160);
+    assert.ok(chunks.every((part) => part.length <= 160));
+    assert.equal(chunks.join(""), text);
+  }
+});
+
+test("every authored sentence in all 32 segments is read whole", () => {
+  const segments = listeningEpisodes.flatMap((episode) => episode.segments);
+  assert.equal(segments.length, 32);
+  for (const segment of segments) {
+    assert.deepEqual(splitSpokenText(segment.text), segment.text.split("\n"), segment.title);
+  }
+});
+
+test("decimal numbers remain intact and punctuation can mark sentence boundaries", () => {
+  const text = "ค่าเท่ากับ 16.67 บาท. จบแล้วครับ! ทวนอีกครั้ง";
+  assert.deepEqual(splitSpokenText(text), ["ค่าเท่ากับ 16.67 บาท.", "จบแล้วครับ!", "ทวนอีกครั้ง"]);
 });
 
 test("older browsers without Intl.Segmenter can still split and read Thai", () => {

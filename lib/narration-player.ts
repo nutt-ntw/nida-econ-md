@@ -7,22 +7,32 @@ export type NarrationState = {
 type Chunk = { segmentIndex: number; text: string };
 type SpeechService = Pick<SpeechSynthesis, "cancel" | "resume" | "speak">;
 
-// Small Thai word-aligned chunks avoid queuing one long utterance and allow replay
-// from the current phrase on devices where native pause/resume is unreliable.
-export function splitSpokenText(text: string, maxLength = 160): string[] {
-  const words = typeof Intl.Segmenter === "function"
-    ? new Intl.Segmenter("th", { granularity: "word" }).segment(text)
-    : Array.from(text, (segment) => ({ segment }));
+// Preserve complete authored sentences so Thai prosody is not reset mid-sentence.
+// Only oversized sentences fall back to bounded word-aligned chunks.
+export function splitSpokenText(text: string, maxLength = 400): string[] {
   const chunks: string[] = [];
-  let current = "";
-  for (const { segment } of words) {
-    if (current && current.length + segment.length > maxLength) {
-      chunks.push(current.trim());
-      current = "";
+  for (const sentence of text.split(/\n+|(?<=[.!?。！？])\s+/u)) {
+    const trimmed = sentence.trim();
+    if (!trimmed) continue;
+    if (trimmed.length <= maxLength) {
+      chunks.push(trimmed);
+      continue;
     }
-    current += segment;
+    const words = typeof Intl.Segmenter === "function"
+      ? Array.from(new Intl.Segmenter("th", { granularity: "word" }).segment(trimmed), (part) => part.segment)
+      : Array.from(trimmed);
+    // A long unbroken Latin token can exceed the bound even with word segmentation.
+    const parts = words.flatMap((word) => word.length > maxLength ? Array.from(word) : [word]);
+    let current = "";
+    for (const part of parts) {
+      if (current && current.length + part.length > maxLength) {
+        if (current.trim()) chunks.push(current.trim());
+        current = "";
+      }
+      current += part;
+    }
+    if (current.trim()) chunks.push(current.trim());
   }
-  if (current.trim()) chunks.push(current.trim());
   return chunks;
 }
 
